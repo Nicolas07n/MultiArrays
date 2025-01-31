@@ -1,0 +1,112 @@
+    internal class Program
+    {
+     
+    static char[,] mapa = new char[10, 10];
+        static int jugadorX = 0;
+        static int jugadorY = 0;
+        static bool juegoActivo = true;
+
+        static void Main(string[] args)
+        {
+            GenerarMapa();
+            mapa[jugadorX, jugadorY] = 'P'; // Colocar al jugador en (0, 0)
+
+            while (juegoActivo)
+            {
+                MostrarMapa();
+                LeerInput();
+            }
+
+            Console.WriteLine("¡Juego terminado!");
+        }
+
+        static void GenerarMapa()
+        {
+            Random random = new Random();
+
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    // Generar elementos aleatorios: ' ' (espacio libre), 'X' (obstáculo), 'M' (mina)
+                    double probabilidad = random.NextDouble();
+                    if (probabilidad < 0.1) // 10% de probabilidad de obstáculo
+                        mapa[i, j] = 'X';
+                    else if (probabilidad < 0.2) // 10% de probabilidad de mina
+                        mapa[i, j] = 'M';
+                    else
+                        mapa[i, j] = ' '; // Espacio libre
+                }
+            }
+        }
+
+        static void MostrarMapa()
+        {
+            Console.Clear(); // Limpiar la consola antes de mostrar el mapa
+
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    Console.Write(mapa[i, j] + " ");
+                }
+                Console.WriteLine();
+            }
+        }
+
+        static void LeerInput()
+        {
+            ConsoleKeyInfo tecla = Console.ReadKey();
+
+            int nuevaX = jugadorX;
+            int nuevaY = jugadorY;
+
+            switch (tecla.Key)
+            {
+                case ConsoleKey.W: // Arriba
+                    nuevaX--;
+                    break;
+                case ConsoleKey.S: // Abajo
+                    nuevaX++;
+                    break;
+                case ConsoleKey.A: // Izquierda
+                    nuevaY--;
+                    break;
+                case ConsoleKey.D: // Derecha
+                    nuevaY++;
+                    break;
+                default: // Cualquier otra tecla termina el juego
+                    juegoActivo = false;
+                    return;
+            }
+
+            // Verificar límites del mapa
+            if (nuevaX < 0 || nuevaX >= 10 || nuevaY < 0 || nuevaY >= 10)
+            {
+                Console.WriteLine("¡No puedes salir del mapa!");
+                return;
+            }
+
+            // Verificar colisiones
+            if (mapa[nuevaX, nuevaY] == 'X')
+            {
+                Console.WriteLine("¡Chocaste con un obstáculo! Vuelves al inicio.");
+                jugadorX = 0;
+                jugadorY = 0;
+            }
+            else if (mapa[nuevaX, nuevaY] == 'M')
+            {
+                Console.WriteLine("¡Pisaste una mina! Fin del juego.");
+                juegoActivo = false;
+            }
+            else
+            {
+                // Mover al jugador
+                mapa[jugadorX, jugadorY] = ' '; // Limpiar la posición anterior
+                jugadorX = nuevaX;
+                jugadorY = nuevaY;
+                mapa[jugadorX, jugadorY] = 'P'; // Colocar al jugador en la nueva posición
+            }
+        }
+    }
+}
