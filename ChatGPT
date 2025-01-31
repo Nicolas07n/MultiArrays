@@ -1,0 +1,86 @@
+    internal class Program
+    {
+        static char[,] mapa = new char[10, 10];
+        static int jugadorX = 0, jugadorY = 0;
+        static Random rand = new Random();
+
+        static void Main()
+        {
+            GenerarMapa();
+            while (true)
+            {
+                Console.Clear();
+                DibujarMapa();
+                Console.WriteLine("\nUsa W A S D para moverte. Presiona cualquier otra tecla para salir.");
+                char input = Console.ReadKey().KeyChar;
+
+                if (!MoverJugador(input))
+                {
+                    Console.WriteLine("\nJuego terminado.");
+                    break;
+                }
+            }
+        }
+
+        static void GenerarMapa()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    int num = rand.Next(10);
+                    if (num < 7) mapa[i, j] = ' '; // Espacios vacíos (70%)
+                    else if (num < 9) mapa[i, j] = 'X'; // Obstáculos (20%)
+                    else mapa[i, j] = 'M'; // Minas (10%)
+                }
+            }
+            mapa[0, 0] = 'P'; // El jugador empieza en (0,0)
+        }
+
+        static void DibujarMapa()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    Console.Write(mapa[i, j] + " ");
+                }
+                Console.WriteLine();
+            }
+        }
+
+        static bool MoverJugador(char direccion)
+        {
+            int nuevaX = jugadorX, nuevaY = jugadorY;
+
+            switch (char.ToUpper(direccion))
+            {
+                case 'W': if (jugadorX > 0) nuevaX--; break;
+                case 'S': if (jugadorX < 9) nuevaX++; break;
+                case 'A': if (jugadorY > 0) nuevaY--; break;
+                case 'D': if (jugadorY < 9) nuevaY++; break;
+                default: return false; // Salir si no es W, A, S o D
+            }
+
+            if (mapa[nuevaX, nuevaY] == 'X')
+            {
+                Console.WriteLine("\n¡Choque contra un obstáculo! Vuelves al inicio.");
+                nuevaX = 0; nuevaY = 0;
+            }
+            else if (mapa[nuevaX, nuevaY] == 'M')
+            {
+                Console.WriteLine("\n¡Pisaste una mina! El juego se reinicia.");
+                GenerarMapa();
+                jugadorX = 0; jugadorY = 0;
+                return true;
+            }
+
+            // Actualizar la posición del jugador en el mapa
+            mapa[jugadorX, jugadorY] = ' ';
+            jugadorX = nuevaX; jugadorY = nuevaY;
+            mapa[jugadorX, jugadorY] = 'P';
+
+            return true;
+        }
+    }
+}
