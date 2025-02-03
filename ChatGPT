@@ -1,4 +1,4 @@
-    internal class Program
+     internal class Program
     {
         static char[,] mapa = new char[10, 10];
         static int jugadorX = 0, jugadorY = 0;
@@ -6,38 +6,41 @@
 
         static void Main()
         {
-            GenerarMapa();
-            while (true)
+            GenerarMapa();//Llama a la funcion que crea el mapa aleatorio y coloca los elementos (X, M, P).
+            while (true) //Bucle Infinito 
             {
-                Console.Clear();
-                DibujarMapa();
-                Console.WriteLine("\nUsa W A S D para moverte. Presiona cualquier otra tecla para salir.");
-                char input = Console.ReadKey().KeyChar;
+                Console.Clear();//Limpia la consola para que se pueda dibujar la siguiente , para que cuando reinicie no se sobrepisen las otras (X o M) 
+                DibujarMapa();//Llama a la funcion DibujarMapa y creal el mapa 10 por 10
+                Console.WriteLine("Usa W A S D para moverte. Presiona cualquier otra tecla para salir.");//Les he puesto un mensaje para que sepan jugar , De nada 
+                char P = Console.ReadKey().KeyChar;//El char(El caracter ),Console.ReadKey() Lee la tecla que has pulsado en el ()(W,A,S,D) Keychar( Analiza lo que has pulsado)(NoTAs)
 
-                if (!MoverJugador(input))
+                if (!MoverJugador(P))//Si MoverJugador de vuelve un false Hace un break
                 {
-                    Console.WriteLine("\nJuego terminado.");
+                    Console.WriteLine("Juego terminado.");
                     break;
                 }
             }
         }
-
-        static void GenerarMapa()
+        //NoTAs
+        //Console.writeLine = Consola porfavor podrias (write)escribir una (Line) linea
+        //Console.Readkey() = Consola porfavor podrias (Read) leer una (key) tecla 
+        static void GenerarMapa() //Esto te pone las cosas en el mapa 
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++)//Si , i (filas) es menor que diez suma uno 
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < 10; j++)//Si , j ( que son las columnas) es menor que 10 suma uno 
                 {
-                    int num = rand.Next(10);
+                    int num = rand.Next(10);//Me da un numero del 0 al 10, para luego asignar cada numero a una mina y tal
                     if (num < 7) mapa[i, j] = ' '; // Espacios vacíos (70%)
                     else if (num < 9) mapa[i, j] = 'X'; // Obstáculos (20%)
                     else mapa[i, j] = 'M'; // Minas (10%)
                 }
             }
-            mapa[0, 0] = 'P'; // El jugador empieza en (0,0)
+            mapa[0, 0] = 'P'; // El jugador empieza en (0,0) Pero la letra P solo aparece el principio, 
         }
-
-        static void DibujarMapa()
+        //NoTAs
+        //mapa[i,j] = es un Array
+        static void DibujarMapa()//Esto solo te hace el mapa de 10 por 10 , pero no te pone ni las minas ni nada
         {
             for (int i = 0; i < 10; i++)
             {
@@ -64,12 +67,12 @@
 
             if (mapa[nuevaX, nuevaY] == 'X')
             {
-                Console.WriteLine("\n¡Choque contra un obstáculo! Vuelves al inicio.");
+                Console.WriteLine("¡Choque contra un obstáculo! Vuelves al inicio.");
                 nuevaX = 0; nuevaY = 0;
             }
             else if (mapa[nuevaX, nuevaY] == 'M')
             {
-                Console.WriteLine("\n¡Pisaste una mina! El juego se reinicia.");
+                Console.WriteLine("¡Pisaste una mina! El juego se reinicia.");
                 GenerarMapa();
                 jugadorX = 0; jugadorY = 0;
                 return true;
@@ -84,3 +87,4 @@
         }
     }
 }
+//NoTAs
